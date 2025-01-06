@@ -39,12 +39,17 @@ with open(output, mode='w', newline='', encoding='utf-8') as file:
         # --d_type f16_r --ldd 1 --compute_type f32_r 
         # --algo 0 --solution_index 0 --flags 0
 
-        command_context = row.split(' ', 1)[1]
+        command_context = row.split(' ',1)[1]
 
-        print(command_context)
+        print("0", command_context)
+        command_context = command_context.split(' ')[:-1]
 
-        command  = ["/root/hipBLASLt/build/release/clients/staging/hipblaslt-bench"]
-        command += [command_context]
+        command_context = [item for item in command_context if item != ""]
+
+        print("1", command_context)
+
+        command  = ["/root/hipBLASLt-yangwen/build/release/clients/staging/hipblaslt-bench"]
+        command += command_context
         # command += ["-f","matmul","--transA","N","--transB","N"]
         # command += ["-m",str(m)]
         # command += ["-n",str(n)]
@@ -73,6 +78,7 @@ with open(output, mode='w', newline='', encoding='utf-8') as file:
         #writer.writerow(cur_row)
 
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(result)
         result_stdout = result.stdout
         result_solu = result_stdout.split(b"\n")[-2]
         result_time = result_solu.split(b",")[-1]
